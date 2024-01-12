@@ -13,9 +13,30 @@ function makeApiRequest(endpoint, method, data = {}) {
         headers: headers,
         body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        handleApiSuccess(data);
+    })
+    .catch(error => {
+        handleApiError(error.message);
+    });
+}
+
+function handleApiSuccess(data) {
+    // Add visual indication for success (e.g., change button color, display success message)
+    console.log('Success:', data);
+    alert('API request successful!');
+}
+
+function handleApiError(errorMessage) {
+    // Add visual indication for error (e.g., change button color, display error message)
+    console.error('Error:', errorMessage);
+    alert('API request failed. Please try again.');
 }
 
 function userRegistration() {
@@ -55,4 +76,3 @@ function getPowerStationsList() {
 function getPowerStationData() {
     // Add implementation for getting power station data
 }
-
