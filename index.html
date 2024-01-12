@@ -4,36 +4,26 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <style>
-        #message-container {
-            margin-top: 10px;
-            padding: 10px;
-            font-weight: bold;
-        }
-
-        #success-message {
-            color: green;
-        }
-
-        #error-message {
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>API Data Retrieval</title>
 </head>
 <body>
-    <button onclick="userRegistration()">User Registration</button>
-    <button onclick="userUpdate()">User Update</button>
-    <button onclick="getPowerStationsList()">Get Power Stations List</button>
-    <button onclick="getPowerStationData()">Get Power Station Data</button>
-    
-    <div id="message-container">
-        <p id="success-message"></p>
-        <p id="error-message"></p>
+    <div class="container">
+        <h1>API Data Retrieval</h1>
+        <button onclick="userRegistration()">User Registration</button>
+        <button onclick="userUpdate()">User Update</button>
+        <button onclick="getPowerStationsList()">Get Power Stations List</button>
+        <button onclick="getPowerStationData()">Get Power Station Data</button>
+        
+        <div id="message-container">
+            <p id="success-message"></p>
+            <p id="error-message"></p>
+        </div>
     </div>
 
     <script src="src/script.js"></script>
 </body>
 </html>
+
 
