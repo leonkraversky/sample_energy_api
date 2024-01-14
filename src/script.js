@@ -11,7 +11,7 @@ function makeApiRequest(endpoint, method, data = {}) {
     return fetch(url, {
         method: method,
         headers: headers,
-        body: JSON.stringify(data),
+        params: JSON.stringify(data),
     })
     .then(response => {
         if (!response.ok) {
