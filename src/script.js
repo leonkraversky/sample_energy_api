@@ -1,11 +1,11 @@
-const apiUrl = 'http://test.growatt.com/v1/';
+const apiUrl = 'https://test.growatt.com/v1/';
 const token = '6eb6f069523055a339d71e5b1f6c88cc';
 
 function makeApiRequest(endpoint, method, data = {}) {
     const url = apiUrl + endpoint;
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token,
+        'token': 'Bearer ' + token,
     };
 
     return fetch(url, {
@@ -19,24 +19,22 @@ function makeApiRequest(endpoint, method, data = {}) {
         }
         return response.json();
     })
-    .then(data => {
-        handleApiSuccess(data);
-    })
     .catch(error => {
-        handleApiError(error.message);
+        return { error: error.message };
     });
 }
 
-function handleApiSuccess(data) {
-    // Add visual indication for success (e.g., change button color, display success message)
-    console.log('Success:', data);
-    alert('API request successful!');
-}
+function handleApiResult(result) {
+    const successMessage = document.getElementById('success-message');
+    const errorMessage = document.getElementById('error-message');
 
-function handleApiError(errorMessage) {
-    // Add visual indication for error (e.g., change button color, display error message)
-    console.error('Error:', errorMessage);
-    alert('API request failed. Please try again.');
+    if (result.error) {
+        errorMessage.textContent = 'Error: ' + result.error;
+        successMessage.textContent = '';
+    } else {
+        successMessage.textContent = 'Success: ' + JSON.stringify(result);
+        errorMessage.textContent = '';
+    }
 }
 
 function userRegistration() {
@@ -49,7 +47,17 @@ function userRegistration() {
         user_type: 1,
     };
 
-    makeApiRequest('user/user_register', 'POST', registrationData);
+    makeApiRequest('user/user_register', 'POST', registrationData)
+        .then(result => handleApiResult(result));
+}
+
+function userCheck() {
+    const updateData = {
+        user_name: 'admin',
+    };
+
+    makeApiRequest('user/modify', 'POST', updateData)
+        .then(result => handleApiResult(result));
 }
 
 function userUpdate() {
@@ -58,21 +66,33 @@ function userUpdate() {
         mobile: '35790000000',
     };
 
-    makeApiRequest('user/modify', 'POST', updateData);
+    makeApiRequest('user/modify', 'POST', updateData)
+        .then(result => handleApiResult(result));
 }
 
 function getPowerStationsList() {
     const listParams = {
-        C_user_id: 1,
+        user_name: 'admin',
+        c_user_id: 1,
         search_type: 'PlantName',
         search_keyword: 'test',
         page: 1,
         perpage: 10,
     };
 
-    makeApiRequest('plant/list', 'GET', listParams);
+    makeApiRequest('plant/list', 'GET', listParams)
+        .then(result => handleApiResult(result));
 }
 
 function getPowerStationData() {
-    // Add implementation for getting power station data
+    const listParams = {
+        c_user_id: 2,
+        search_type: 'PlantName',
+        search_keyword: 'test',
+        page: 1,
+        perpage: 10,
+    };
+
+    makeApiRequest('plant/details', 'GET', listParams)
+        .then(result => handleApiResult(result));
 }
