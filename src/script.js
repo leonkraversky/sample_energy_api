@@ -4,8 +4,7 @@ const token = '6eb6f069523055a339d71e5b1f6c88cc';
 function makeApiRequest(endpoint, method, data = {}) {
     const url = apiUrl + endpoint;
     const headers = {
-        'Content-Type': 'application/json',
-        'token': 'Bearer ' + token,
+        'token': token,
     };
 
     return fetch(url, {
