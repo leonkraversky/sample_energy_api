@@ -1,26 +1,35 @@
-const apiUrl = 'https://test.growatt.com/v1/';
+const apiUrl = 'http://localhost:3000/v1/';
 const token = '6eb6f069523055a339d71e5b1f6c88cc';
 
 function makeApiRequest(endpoint, method, data = {}) {
-    const url = apiUrl + endpoint;
+    let url = apiUrl + endpoint;
     const headers = {
         'token': token,
+        'Content-Type': 'application/json', // Required for POST requests
     };
 
-    return fetch(url, {
+    const options = {
         method: method,
         headers: headers,
-        params: JSON.stringify(data),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-    })
-    .catch(error => {
-        return { error: error.message };
-    });
+    };
+
+    if (method === 'POST') {
+        options.body = JSON.stringify(data); // Send data in body for POST
+    } else if (method === 'GET') {
+        url = buildUrl(endpoint, data); // Use buildUrl for GET params
+    }
+
+    return fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Fetch error:', error); // Log error for debugging
+            return { error: error.message };
+        });
 }
 
 function handleApiResult(result) {
@@ -55,7 +64,7 @@ function userCheck() {
         user_name: 'admin',
     };
 
-    makeApiRequest('user/modify', 'POST', updateData)
+    makeApiRequest('user/check_user', 'POST', updateData)
         .then(result => handleApiResult(result));
 }
 
@@ -94,4 +103,11 @@ function getPowerStationData() {
 
     makeApiRequest('plant/details', 'GET', listParams)
         .then(result => handleApiResult(result));
+}
+
+// Helper function to build URL with parameters
+function buildUrl(endpoint, params) {
+    const url = new URL(apiUrl + endpoint);
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    return url.toString();
 }
